@@ -3,7 +3,7 @@ title: "Dependencies.ioによるGitLabプロジェクトのマニフェスト自
 emoji: "🦊"
 type: "tech"
 topics: [GitLab, SRE]
-published: true
+published: false
 published_at: 2018-12-19 02:43
 ---
 

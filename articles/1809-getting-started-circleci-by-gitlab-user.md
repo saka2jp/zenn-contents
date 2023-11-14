@@ -3,7 +3,7 @@ title: "コテコテのGitLabユーザがCircleCIに入門してみた"
 emoji: "🦊"
 type: "tech"
 topics: [GitLab, CircleCI]
-published: true
+published: false
 published_at: 2018-09-26 02:02
 ---
 

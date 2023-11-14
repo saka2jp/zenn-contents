@@ -3,7 +3,7 @@ title: "「新しいLinuxの教科書」から学んだこと。"
 emoji: "📖"
 type: "idea"
 topics: [書評, Linux]
-published: true
+published: false
 published_at: 2018-03-31 07:46
 ---
 

@@ -3,7 +3,7 @@ title: ".gitlab-ci.ymlの俺的Tips"
 emoji: "🦊"
 type: "tech"
 topics: [GitLab, DevOps, CI/CD]
-published: true
+published: false
 published_at: 2018-12-09 12:48
 ---
 

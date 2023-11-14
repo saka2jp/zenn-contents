@@ -3,7 +3,7 @@ title: "「Effective DevOps」から学んだこと。"
 emoji: "📖"
 type: "tech"
 topics: [DevOps, 書評]
-published: true
+published: false
 published_at: 2020-01-07 02:33
 ---
 

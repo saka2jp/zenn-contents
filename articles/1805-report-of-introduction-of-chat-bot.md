@@ -3,7 +3,7 @@ title: "チャットボット設計・開発入門に参加してきました"
 emoji: "📖"
 type: "tech"
 topics: [勉強会]
-published: true
+published: false
 published_at: 2018-05-28 11:09
 ---
 

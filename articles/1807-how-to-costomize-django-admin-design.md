@@ -3,7 +3,7 @@ title: "Django管理画面のカスタマイズ方法【デザイン】"
 emoji: "🎸"
 type: "tech"
 topics: [Django, Python]
-published: true
+published: false
 published_at: 2018-07-31 05:51
 ---
 

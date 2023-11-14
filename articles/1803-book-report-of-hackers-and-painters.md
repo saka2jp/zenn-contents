@@ -3,7 +3,7 @@ title: "「ハッカーと画家」から学んだこと。"
 emoji: "📖"
 type: "idea"
 topics: [書評]
-published: true
+published: false
 published_at: 2018-03-22 03:19
 ---
 

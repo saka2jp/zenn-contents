@@ -3,7 +3,7 @@ title: "GKEで学ぶKubernetes入門に参加してきました"
 emoji: "😀"
 type: "🏃‍♂️"
 topics: [Kubernetes, 勉強会]
-published: true
+published: false
 published_at: 2018-06-07 12:34
 ---
 

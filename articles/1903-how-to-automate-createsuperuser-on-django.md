@@ -3,7 +3,7 @@ title: "【Django】ワンライナーでスーパーユーザーを作成する
 emoji: "🎸"
 type: "tech"
 topics: [Django, Python]
-published: true
+published: false
 published_at: 2019-03-10 09:37
 ---
 

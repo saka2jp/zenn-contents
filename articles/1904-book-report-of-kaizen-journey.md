@@ -3,7 +3,7 @@ title: "「カイゼン・ジャーニー」から学んだこと。"
 emoji: "📖"
 type: "idea"
 topics: [書評, スクラム, アジャイル]
-published: true
+published: false
 published_at: 2019-04-14 08:11
 ---
 

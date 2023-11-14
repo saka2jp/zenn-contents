@@ -3,7 +3,7 @@ title: "「エンジニアリング組織論への招待」から学んだこと
 emoji: "📖"
 type: "tech"
 topics: [書評]
-published: true
+published: false
 published_at: 2019-05-02 09:00
 ---
 

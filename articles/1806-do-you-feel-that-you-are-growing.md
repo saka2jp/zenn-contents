@@ -3,7 +3,7 @@ title: "「成長している実感ある？」"
 emoji: "💡"
 type: "idea"
 topics: [ポエム]
-published: true
+published: false
 published_at: 2018-06-22 06:28
 ---
 

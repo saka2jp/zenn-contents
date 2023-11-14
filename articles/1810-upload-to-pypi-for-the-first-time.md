@@ -3,7 +3,7 @@ title: "はじめてのPyPIを公開しました"
 emoji: "🐍"
 type: "tech"
 topics: [Python, AWS, Programming]
-published: true
+published: false
 published_at: 2018-10-01 08:53
 ---
 

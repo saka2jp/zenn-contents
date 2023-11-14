@@ -3,7 +3,7 @@ title: "Python3への移行リスクを最小限にする"
 emoji: "🐍"
 type: "tech"
 topics: [Python, 勉強会, Programming]
-published: true
+published: false
 published_at: 2020-02-28 02:00
 ---
 

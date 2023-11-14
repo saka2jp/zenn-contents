@@ -3,7 +3,7 @@ title: "「知識ゼロから学ぶソフトウェアテスト」から学んだ
 emoji: "📖"
 type: "idea"
 topics: [書評]
-published: true
+published: false
 published_at: 2018-03-25 07:15
 ---
 

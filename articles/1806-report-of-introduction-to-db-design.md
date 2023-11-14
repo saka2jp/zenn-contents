@@ -3,7 +3,7 @@ title: "DBテーブル設計入門に参加してきました"
 emoji: "🏃‍♂️"
 type: "tech"
 topics: [勉強会]
-published: true
+published: false
 published_at: 2018-06-12 08:37
 ---
 

@@ -3,7 +3,7 @@ title: "「サーバーレスでめざせ！インフラ管理ゼロなシステ
 emoji: "📖"
 type: "tech"
 topics: [Serverless, 書評]
-published: true
+published: false
 published_at: 2019-12-30 06:08
 ---
 

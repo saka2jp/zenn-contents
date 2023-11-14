@@ -3,7 +3,7 @@ title: "GitLabではじめる一人DevOps"
 emoji: "🦊"
 type: "tech"
 topics: [勉強会, DevOps, GitLab, CI/CD]
-published: true
+published: false
 published_at: 2019-03-27 10:24
 ---
 

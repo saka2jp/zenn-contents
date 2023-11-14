@@ -3,7 +3,7 @@ title: "GitLabのイシュートラッカー活用術"
 emoji: "🦊"
 type: "tech"
 topics: [勉強会, GitLab, Programming]
-published: true
+published: false
 published_at: 2018-04-16 01:08
 ---
 

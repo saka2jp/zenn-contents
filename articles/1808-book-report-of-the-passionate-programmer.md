@@ -3,7 +3,7 @@ title: "「情熱プログラマー」から学んだこと。"
 emoji: "📖"
 type: "idea"
 topics: [書評]
-published: true
+published: false
 published_at: 2018-08-02 01:57
 ---
 

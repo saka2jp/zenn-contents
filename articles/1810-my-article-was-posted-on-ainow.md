@@ -3,7 +3,7 @@ title: "「AINOW」に記事が掲載されました！"
 emoji: "🙏"
 type: "idea"
 topics: [ポエム]
-published: true
+published: false
 published_at: 2018-10-02 04:59
 ---
 

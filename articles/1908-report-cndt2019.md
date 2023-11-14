@@ -3,7 +3,7 @@ title: "CloudNative Days Tokyo 2019 参加レポート"
 emoji: "🏃‍♂️"
 type: "tech"
 topics: [勉強会, クラウドネイティブ]
-published: true
+published: false
 published_at: 2019-08-04 05:31
 ---
 

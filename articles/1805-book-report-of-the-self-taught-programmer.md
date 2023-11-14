@@ -3,7 +3,7 @@ title: "「独学プログラマー」から学んだこと。"
 emoji: "📖"
 type: "idea"
 topics: [Python, 書評]
-published: true
+published: false
 published_at: 2018-05-31 05:52
 ---
 

@@ -3,7 +3,7 @@ title: "Tech Trend Tokyo #7に参加してきました"
 emoji: "🏃‍♂️"
 type: "tech"
 topics: [機械学習, Python, 勉強会]
-published: true
+published: false
 published_at: 2018-10-04 12:02
 ---
 

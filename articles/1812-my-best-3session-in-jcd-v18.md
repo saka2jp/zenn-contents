@@ -3,7 +3,7 @@ title: "JapanContainerDays v18.12 これだけは目を通しておきたいセ�
 emoji: "💡"
 type: "idea"
 topics: [GitLab, Kubernetes, Docker, 勉強会]
-published: true
+published: false
 published_at: 2018-12-08 05:48
 ---
 

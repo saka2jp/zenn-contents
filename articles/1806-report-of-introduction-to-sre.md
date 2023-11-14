@@ -3,7 +3,7 @@ title: "SRE がよく利用するソフトウェアの理解と分類講座に�
 emoji: "🏃‍♂️"
 type: "tech"
 topics: [SRE, 勉強会]
-published: true
+published: false
 published_at: 2018-06-07 11:27
 ---
 

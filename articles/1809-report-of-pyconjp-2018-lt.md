@@ -3,7 +3,7 @@ title: "テキストマイニングによるTwitter個人アカウントの性�
 emoji: "🐍"
 type: "tech"
 topics: [Python, 勉強会, 機械学習]
-published: true
+published: false
 published_at: 2018-09-17 09:32
 ---
 

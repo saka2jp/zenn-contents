@@ -3,7 +3,7 @@ title: "「GitLab実践ガイド」から学んだこと。"
 emoji: "📖"
 type: "idea"
 topics: [書評, GitLab]
-published: true
+published: false
 published_at: 2018-03-30 09:18
 ---
 

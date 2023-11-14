@@ -3,7 +3,7 @@ title: "仮想通貨の技術に参加してきました"
 emoji: "🏃‍♂️"
 type: "tech"
 topics: [勉強会, ブロックチェーン]
-published: true
+published: false
 published_at: 2018-06-25 09:55
 ---
 

@@ -3,7 +3,7 @@ title: "DjangoCongress JP 2018 に参加してきました"
 emoji: "🏃‍♂️"
 type: "tech"
 topics: [勉強会, Django]
-published: true
+published: false
 published_at: 2018-05-20 05:57
 ---
 

@@ -3,7 +3,7 @@ title: "【Python】loggingのerror()とexception()の違い"
 emoji: "🐍"
 type: "tech"
 topics: [Python]
-published: true
+published: false
 published_at: 2019-01-24 07:30
 ---
 

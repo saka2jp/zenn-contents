@@ -3,7 +3,7 @@ title: "Nuxt + Firebase でWEBサービスを作るハンズオンに参加し�
 emoji: "🎉"
 type: "tech"
 topics: [Nuxt.js, Firebase, 勉強会, Vue.js]
-published: true
+published: false
 published_at: 2018-12-11 02:11
 ---
 

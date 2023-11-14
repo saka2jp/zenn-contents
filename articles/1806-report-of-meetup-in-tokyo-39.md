@@ -3,7 +3,7 @@ title: "Meetup in Tokyo #39 Testing & Engineering に参加してきました"
 emoji: "🏃‍♂️"
 type: "tech"
 topics: [勉強会, テスト, QA]
-published: true
+published: false
 published_at: 2018-06-28 07:40
 ---
 

@@ -3,7 +3,7 @@ title: "「DNSをはじめよう」から学んだこと。"
 emoji: "📖"
 type: "tech"
 topics: [AWS, 書評, インフラ]
-published: true
+published: false
 published_at: 2019-04-22 03:10
 ---
 

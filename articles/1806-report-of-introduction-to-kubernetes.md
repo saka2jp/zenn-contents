@@ -3,7 +3,7 @@ title: "入門Kubernetesに参加してきました"
 emoji: "🏃‍♂️"
 type: "tech"
 topics: [Kubernetes, 勉強会]
-published: true
+published: false
 published_at: 2018-06-06 10:14
 ---
 

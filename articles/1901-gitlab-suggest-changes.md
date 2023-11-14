@@ -3,7 +3,7 @@ title: "GitLab 11.6の新機能「Suggest Changes」が便利なのでオスス�
 emoji: "🦊"
 type: "tech"
 topics: [GitLab]
-published: true
+published: false
 published_at: 2019-01-22 08:59
 ---
 

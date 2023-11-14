@@ -3,7 +3,7 @@ title: "「アルゴリズムを、はじめよう」から学んだこと。"
 emoji: "📖"
 type: "idea"
 topics: [書評]
-published: true
+published: false
 published_at: 2018-03-18 10:49
 ---
 

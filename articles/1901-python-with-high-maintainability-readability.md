@@ -3,7 +3,7 @@ title: "保守性・可読性の高いPythonコードを実装するためには
 emoji: "🐍"
 type: "tech"
 topics: [Django, Python]
-published: true
+published: false
 published_at: 2019-01-08 10:13
 ---
 

@@ -3,7 +3,7 @@ title: "「Goで学ぶAWS Lambda」から学んだこと。"
 emoji: "📖"
 type: "tech"
 topics: [Serverless, Golang, AWS, 書評]
-published: true
+published: false
 published_at: 2020-01-04 07:45
 ---
 

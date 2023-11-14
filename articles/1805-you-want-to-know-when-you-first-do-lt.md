@@ -3,7 +3,7 @@ title: "はじめてLTをする時に知っておきたい4つのこと"
 emoji: "💡"
 type: "idea"
 topics: [ポエム]
-published: true
+published: false
 published_at: 2018-05-02 03:37
 ---
 
