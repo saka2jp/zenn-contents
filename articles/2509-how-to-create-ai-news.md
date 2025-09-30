@@ -2,7 +2,7 @@
 title: "AI社内報の作り方：Slack×OpenAIで社内ニュースを自動生成"
 emoji: "📰"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ['Python', 'OpenAI', '生成AI', 'Slack']
+topics: ['Python', 'OpenAI', '生成AI', 'AI', 'Slack']
 published: true
 ---
 
