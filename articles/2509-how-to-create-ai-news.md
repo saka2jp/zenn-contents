@@ -1,5 +1,5 @@
 ---
-title: "社内コミュニケーションを促進するAI社内報の作り方【ソースコード公開】"
+title: "AI社内報の作り方：Slack×OpenAIで社内ニュースを自動生成"
 emoji: "📰"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['Python', 'OpenAI', '生成AI', 'Slack']
