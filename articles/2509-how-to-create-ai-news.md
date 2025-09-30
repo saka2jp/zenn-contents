@@ -102,14 +102,14 @@ Slack Appに以下のScopesを設定してください。
 ## 開発の工夫
 なるべく低コストで運用し続けられるような工夫を行いました。
 
-- 定期実行はGitHub Actionsを活用
+- **定期実行はGitHub Actionsを活用**
   - パブリックリポジトリ: 実行は無料・無制限
   - プライベートリポジトリ: プランごとに毎月の無料分あり（超過で従量課金）
     - Free: 2,000分/月
     - Pro/Team: 3,000分/月
     - Enterprise: 50,000分/月
   - 出典：[GitHub Actions 料金ページ](https://docs.github.com/ja/billing/concepts/product-billing/github-actions)
-- LLMの入力トークンをなるべく減らす
+- **LLMの入力トークンをなるべく減らす**
   - Slack APIで取得できる情報のうち、必要なフィールドのみを選択
   - URL, 改行, メンションなど不要な情報を可能な限り削除
 
@@ -118,5 +118,3 @@ Slack Appに以下のScopesを設定してください。
 
 PeopleXではHR領域に革新を起こすべく、AI面接/AI受付/AIトレーニング/AI上司など、AIを活用したプロダクト開発を行っております。
 ご興味ある方はぜひ一度お話ししましょう！
-
-https://hrmos.co/pages/peoplex/jobs/000
