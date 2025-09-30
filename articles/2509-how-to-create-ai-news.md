@@ -118,5 +118,3 @@ Slack Appに以下のScopesを設定してください。
 
 PeopleXではHR領域に革新を起こすべく、AI面接/AI受付/AIトレーニング/AI上司など、AIを活用したプロダクト開発を行っております。
 ご興味ある方はぜひ一度お話ししましょう！
-
-https://hrmos.co/pages/peoplex/jobs/000
