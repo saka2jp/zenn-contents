@@ -3,7 +3,7 @@ title: "社内コミュニケーションを促進するAI社内報の作り方�
 emoji: "📰"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['Python', 'OpenAI', '生成AI', 'Slack']
-published: false
+published: true
 ---
 
 ## はじめに
