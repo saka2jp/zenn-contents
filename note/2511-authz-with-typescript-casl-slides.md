@@ -93,20 +93,42 @@ SaaSとOSSどちらを選定するべき？
 
 ---
 
-# Why CASL?
+# OSSライブラリの採用
 
-1. **Isomorphic** 🔄
-   - ポリシーを FE/BE 両方で再利用可能
-2. **Type Safety** 🛡️
-   - TypeScript 完全対応
-3. **Database Integration** 🗄️
-   - Prisma の Where 句へ自動変換 (`@casl/prisma`)
-4. **Declarative** 📝
-   - 宣言的なポリシー定義
+SaaSは強力だが、外部通信によるレイテンシや、ローカル開発・CI 環境の複雑化といったオーバーヘッドを伴う。
+
+PeopleX AI面接では、以下の要件を重視し、**Node.js プロセス内で完結するライブラリベースのアプローチ**を採用。
+
+- **コスト:** 従量課金の SaaS モデルを避け、スケーリングしてもコストが増加しないようにしたい。
+- **開発体験:** 外部依存を減らし、`npm install` だけで開発環境が整うシンプルさを保ちたい。
+- **DB連携:** ビジネスロジックと認可ロジックのWhere句を分離しつつ、効率的なクエリを発行したい。
+- **低レイテンシ:** 認可判定のたびにネットワーク通信を発生させたくない。
 
 ---
 
-# 実装: Abilityの定義
+# Why CASL?
+
+1.  **Isomorphic:** 定義したポリシーをフロントエンドとバックエンドの両方で再利用可能
+2.  **Type Safety:** ポリシーをTypeScript で宣言的に記述可能
+3.  **API Integration:** デコレータによるAPIレベルでの宣言的な認可設定が可能
+4.  **Database Integration:** SQLクエリ条件をポリシーとして宣言的に定義可能
+5.  **Frontend Integration:** 直感的・宣言的な認可判定が可能
+
+---
+
+# Ability（TypeScript によるポリシー定義）
+
+## Ability とは？
+
+CASL における **Ability** は、認可ルールの心臓部となるクラス
+これは「ユーザーがどのような操作（Action）を、どのリソース（Subject）に対して行えるか」というルールを詰め込んだオブジェクト
+
+例えば、「記事（Article）を読む（read）ことができる」「自分の書いた記事なら更新（update）できる」といったルール定義を `Ability` インスタンスとして定義する
+アプリケーション側では、この Ability に対して `ability.can('update', article)` と問いかけるだけで、複雑な条件分岐なしに権限判定を行うことが可能
+
+---
+
+## 型定義とAbilityの構築
 
 Prismaの型をそのままSubjectとして利用可能
 
@@ -126,9 +148,9 @@ export type AppAbility = PureAbility<[Action, AppSubjects], PrismaQuery>;
 
 ---
 
-# 実装: ポリシーファクトリ
+## ポリシーファクトリ
 
-ユーザーコンテキストから動的に権限を生成
+ポリシーを動的に定義（実際にはロールと権限のペアを別ファイルで宣言的に管理）
 
 ```typescript
 export function defineAbilityFor(user: UserContext): AppAbility {
@@ -152,7 +174,7 @@ export function defineAbilityFor(user: UserContext): AppAbility {
 
 # BE実装: APIレベルの制御 (NestJS)
 
-Guardとデコレータで宣言的に記述
+Guardとデコレータで宣言的に記述可能
 
 ```typescript
 @Get()
@@ -166,30 +188,45 @@ async findAll() {
 
 ---
 
-# BE実装: Prisma統合 (重要!)
+# BE実装: Prisma
 
-`accessibleBy` で **権限があるデータだけ** をDBから引く
+CASL 公式の `@casl/prisma` プラグインを使用することで、定義した Ability を Prisma の `where` 句として呼び出すだけ
 
 ```typescript
 import { accessibleBy } from '@casl/prisma';
 
-// Service層
 const candidates = await prisma.candidate.findMany({
   where: {
     AND: [
-      // ✨ Magic: AbilityからWhere句を自動生成
+      // AbilityからWhere句を参照
       accessibleBy(ability, 'read').Candidate,
     ]
   }
 });
 ```
-✅ `departmentId: { in: [...] }` が自動的にSQLに適用される
 
 ---
 
-# FE実装: Reactコンポーネント
+# BE実装: フィールドレベルの認可
 
-`<Can>` コンポーネントで宣言的にUI制御
+`permittedFieldsOf` ヘルパーが利用可能
+
+```typescript
+import pick from 'lodash/pick';
+import { permittedFieldsOf } from '@casl/ability/extra';
+
+// 取得したオブジェクトから、見せてはいけないフィールドを除外する
+const candidate = await prisma.candidate.findUnique({ ... });
+const fields = permittedFieldsOf(ability, 'read', candidate, { fieldsFrom: rule => rule.fields || [] });
+
+// Lodashのpickなどでフィルタリング
+const sanitizedCandidate = pick(candidate, fields);
+res.json(sanitizedCandidate);
+```
+
+---
+
+# FE実装: Canコンポーネント
 
 ```tsx
 export function CandidateCard({ candidate }) {
@@ -208,13 +245,11 @@ export function CandidateCard({ candidate }) {
 
 ---
 
-# FE実装: Reactコンポーネント
-
-カスタムフック＆関数呼び出し
+# FE実装: 関数呼び出し
 
 ```tsx
 export function CandidateCard({ candidate }) {
-  const ability = useAppAbility();
+  const ability = useAppAbility();　// AppAbilityを参照するカスタムフック
 
   return (
     <div className="card">
@@ -229,30 +264,42 @@ export function CandidateCard({ candidate }) {
 
 ---
 
-# 導入してよかったポイント
+# 👍 導入してよかったポイント
 
-## 👍
-- **一貫性:** FE/BEで同じロジックを使用可能
-- **堅牢性:** DBレベルでのフィルタリングで漏洩防止
-- **安全性:** TypeScriptによる型補完
+1.  **TypeScriptによる認可ロジックの宣言的定義**
+    認可のロジックが `Ability`（ポリシー定義）として一箇所に集約できる点。仕様変更があっても、ここだけ直せば全レイヤーに反映される安心感がある。
+
+2.  **Prisma 連携が強力**
+    開発者は認可のロジックとビジネスロジックを混合せず、独立してクエリを書くことができる点。ロジックが混合せず、メンテナンス性の高いコードを維持することができている。
+
+3.  **開発者体験の向上**
+    実装が宣言的・直感的にできる点。認可基盤の具体まで詳細に理解できていなくとも、適切に適用できる基盤を整えることができた。
 
 ---
 
-# 工夫が必要なポイント
+# 🤔 工夫が必要なポイント
 
-## 🤔
-- **型定義の複雑さ:** ジェネリクス等の理解が必要
-- **クエリの複雑化:** `accessibleBy` が生成するクエリのパフォーマンス監視は必要
+1.  **複雑な条件の制御**
+    Prisma の `WhereInput` に変換できる条件しか書けないため、あまりに複雑になるケースにおいては、無理に CASL に押し込まずサービス層で補完するなどの割り切りも必要と感じた。
+
+2.  **型定義の複雑さ**
+    TypeScript の型推論をフル活用しようとすると、ジェネリクスや型定義がやや複雑。
+    例えば、`PureAbility<[Action, Subjects<{ Candidate: Candidate }>], PrismaQuery>` のような定義は、初見では直感的に理解しづらい。
+
+---
+
+# 🤔 工夫が必要なポイント
+
+3.  **SQLの複雑化**
+    `accessibleBy` は便利な反面、生成される SQL が暗黙的で意図せず複雑で冗長になってしまうことがある。インデックスが効きにくいクエリが生成されていないか、定期的なスロークエリの監視や開発時のデバッグは必要と感じている。
 
 ---
 
 # まとめ
 
-BtoB SaaSの認可は複雑だが、**CASL + Prisma** で解決できる
+- BtoB SaaSの認可は複雑
+- 認可の導入をサポートしてくれるSaaSやOSSなどアプローチが複数ある
+- 組織やアーキテクチャに沿った技術選定をすることで、すばやく実装し、メンテナンス性高く維持することができる
+- TypeScript / Next.js / NestJS / Prisma を採用しているアーキテクチャにおいては、CASLが有力候補
 
-- 認可ロジックを **「ポリシー定義」** に集約
-- **Isomorphic** に FE/BE で共有
-- ビジネスロジックと認可ロジックを **疎結合** に保つ
-
-**堅牢でメンテナンス性の高い認可基盤を構築しましょう！**
-
+**正しい知識を元に、状況に沿った最適な技術選定を行い、プロダクトのコアバリューの開発に集中しよう**
