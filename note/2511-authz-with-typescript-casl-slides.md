@@ -4,6 +4,25 @@ theme: default
 paginate: true
 header: TypeScript×CASLでつくるSaaSの認可
 footer: @PeopleX, Inc.
+style: |
+  section {
+    h1 {
+      color: #223D33;
+    }
+    background-image: linear-gradient(to top, #223D33 10px, transparent 10px);
+  }
+  section.lead {
+    background-color: #223D33;
+    color: #B9A370;
+    justify-content: center;
+    text-align: center;
+  }
+  section.lead h1, section.lead h2, section.lead h3 {
+    color: #B9A370;
+  }
+  section.lead header, section.lead footer, section.lead::after {
+    color: #B9A370;
+  }
 ---
 
 # TypeScript×CASLでつくるSaaSの認可
@@ -26,17 +45,6 @@ BtoB SaaS開発において「認可 (Authorization)」は複雑でセキュリ�
 
 ---
 
-# BtoB SaaSの代表認可パターン
-
-| パターン | 概要 | 具体例 |
-| ---- | ---- | ---- |
-| **ロールベース** | 役割（Role）に基づく大枠の制御 | 「管理者」は設定変更可、「一般」は閲覧のみ |
-| **属性ベース** | 所属に基づく動的な制御 | 自分の部署のリソースのみ閲覧可 |
-| **関係性ベース** | 所有に基づく動的な制御 | 自分の所有・担当するリソースのみ閲覧可 |
-| **フィールドレベル** | 特定の項目（列）ごとの制御 | 給与額や評価コメントなど、センシティブな情報のマスク |
-
----
-
 # 認可の代表的なモデルのおさらい
 
 SaaS要件に応じて適切なモデルを選択する必要がある
@@ -46,9 +54,11 @@ SaaS要件に応じて適切なモデルを選択する必要がある
 | **RBAC** | **役割** | ・シンプルで直感的<br>・「誰が何をできるか」を定義 |
 | **ABAC** | **属性** | ・「AかつBなら許可」のような複雑な条件を表現できる<br>・きめ細かな制御が可能 |
 | **ReBAC** | **関係性** | ・グラフ構造や階層構造に強い<br>・親リソースの権限を子へ継承させやすい |
-| **PBAC** | **ポリシー** | ・認可ロジックを分離・コード管理できる (Policy as Code)<br>・RBAC/ABAC/ReBACを包括的に表現可能 |
+| **PBAC** | **ポリシー** | ・認可ロジックを分離・コード管理できる (Policy as Code) |
 
 ---
+
+<!-- _class: lead -->
 
 # デモ
 
@@ -80,12 +90,16 @@ SaaSとOSSどちらを選定するべき？
 # 主要な認可サービス
 
 1.  **[Auth0 FGA](https://auth0.com/fine-grained-authorization)**
-    - Auth0 が提供する、Google Zanzibar モデルに基づいた認可サービス。
+    - Auth0 が提供する、Google Zanzibar に基づいた認可サービス。
     - **特徴:** Auth0 (Okta) エコシステムの一部であり、多機能。
 
 2.  **[Oso Cloud](https://www.osohq.com/application-authorization)**
     - 開発者体験 (DX) を最優先に設計された、BtoB SaaS 開発で人気のあるサービスの一つ。
     - **特徴:** 独自のポリシー言語「Polar」を使用。
+
+---
+
+# 主要な認可サービス
 
 3.  **[Permit.io](https://www.permit.io/)**
     - OPA (Open Policy Agent) をベースにしつつ、UIベースの管理に強みを持つサービス。
@@ -97,7 +111,11 @@ SaaSとOSSどちらを選定するべき？
 
 SaaSは強力だが、外部通信によるレイテンシや、ローカル開発・CI 環境の複雑化といったオーバーヘッドを伴う。
 
-PeopleX AI面接では、以下の要件を重視し、**Node.js プロセス内で完結するライブラリベースのアプローチ**を採用。
+PeopleX AI面接では、**Node.js プロセス内で完結するライブラリベースのアプローチ**を採用。
+
+---
+
+# OSSライブラリの採用
 
 - **コスト:** 従量課金の SaaS モデルを避け、スケーリングしてもコストが増加しないようにしたい。
 - **開発体験:** 外部依存を減らし、`npm install` だけで開発環境が整うシンプルさを保ちたい。
@@ -123,8 +141,7 @@ PeopleX AI面接では、以下の要件を重視し、**Node.js プロセス内
 CASL における **Ability** は、認可ルールの心臓部となるクラス
 これは「ユーザーがどのような操作（Action）を、どのリソース（Subject）に対して行えるか」というルールを詰め込んだオブジェクト
 
-例えば、「記事（Article）を読む（read）ことができる」「自分の書いた記事なら更新（update）できる」といったルール定義を `Ability` インスタンスとして定義する
-アプリケーション側では、この Ability に対して `ability.can('update', article)` と問いかけるだけで、複雑な条件分岐なしに権限判定を行うことが可能
+アプリケーション側では、`ability.can('update', article)` と問いかけるだけで、複雑な条件分岐なしに権限判定を行うことが可能
 
 ---
 
@@ -217,7 +234,10 @@ import { permittedFieldsOf } from '@casl/ability/extra';
 
 // 取得したオブジェクトから、見せてはいけないフィールドを除外する
 const candidate = await prisma.candidate.findUnique({ ... });
-const fields = permittedFieldsOf(ability, 'read', candidate, { fieldsFrom: rule => rule.fields || [] });
+const fields = permittedFieldsOf(
+  ability, 'read', candidate,
+  { fieldsFrom: rule => rule.fields || [] },
+);
 
 // Lodashのpickなどでフィルタリング
 const sanitizedCandidate = pick(candidate, fields);
@@ -256,7 +276,12 @@ export function CandidateCard({ candidate }) {
       <h1>{candidate.name}</h1>
       
       {/* 権限がない場合はボタンを非活性 */}
-      <button onClick={handleEdit} disabled={ability.cannot('update', candidate)}>編集</button>
+      <button
+        onClick={handleEdit}
+        disabled={ability.cannot('update', candidate)}
+      >
+        編集
+      </button>
     </div>
   );
 }
@@ -264,7 +289,7 @@ export function CandidateCard({ candidate }) {
 
 ---
 
-# 👍 導入してよかったポイント
+# 導入してよかったポイント
 
 1.  **TypeScriptによる認可ロジックの宣言的定義**
     認可のロジックが `Ability`（ポリシー定義）として一箇所に集約できる点。仕様変更があっても、ここだけ直せば全レイヤーに反映される安心感がある。
@@ -277,7 +302,7 @@ export function CandidateCard({ candidate }) {
 
 ---
 
-# 🤔 工夫が必要なポイント
+# 工夫が必要なポイント
 
 1.  **複雑な条件の制御**
     Prisma の `WhereInput` に変換できる条件しか書けないため、あまりに複雑になるケースにおいては、無理に CASL に押し込まずサービス層で補完するなどの割り切りも必要と感じた。
@@ -288,7 +313,7 @@ export function CandidateCard({ candidate }) {
 
 ---
 
-# 🤔 工夫が必要なポイント
+# 工夫が必要なポイント
 
 3.  **SQLの複雑化**
     `accessibleBy` は便利な反面、生成される SQL が暗黙的で意図せず複雑で冗長になってしまうことがある。インデックスが効きにくいクエリが生成されていないか、定期的なスロークエリの監視や開発時のデバッグは必要と感じている。
@@ -302,4 +327,4 @@ export function CandidateCard({ candidate }) {
 - 組織やアーキテクチャに沿った技術選定をすることで、すばやく実装し、メンテナンス性高く維持することができる
 - TypeScript / Next.js / NestJS / Prisma を採用しているアーキテクチャにおいては、CASLが有力候補
 
-**正しい知識を元に、状況に沿った最適な技術選定を行い、プロダクトのコアバリューの開発に集中しよう**
+**正しい知識を元に、状況に応じた最適な技術選定を行い、プロダクトのコアバリューの開発に集中しよう**
