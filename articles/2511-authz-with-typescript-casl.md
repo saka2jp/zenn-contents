@@ -20,18 +20,11 @@ BtoB SaaS の開発において、「認可（Authorization）」 は複雑で�
 
 本記事では、フロントエンド/バックエンドで TypeScript を採用している PeopleX AI面接を題材に、**CASL** を中心に据えた認可アーキテクチャの実践を紹介します。 
 
-# 1. SaaS における認可と技術選定
+# BtoB SaaS における認可と技術選定
 
-BtoB SaaS、特にエンタープライズ向けの製品開発において、以下の認可パターンが求められることが一般的です。
+BtoB SaaSにおける認可は、サービスによって大きく要求が変わらないため、主流なデザインパターンがいくつか存在します。
 
-| パターン | 概要 | 具体例 |
-| ---- | ---- | ---- |
-| **ロールベース** | 役割（Role）に基づく大枠の制御 | 「管理者」は設定変更可、「一般」は閲覧のみ |
-| **属性ベース** | 所属に基づく動的な制御 | 自分の部署のリソースのみ閲覧可 |
-| **関係性ベース** | 所有に基づく動的な制御 | 自分の所有・担当するリソースのみ閲覧可 |
-| **フィールドレベル** | 特定の項目（列）ごとの制御 | 給与額や評価コメントなど、センシティブな情報のマスク |
-
-ほとんどのSaaSではロール管理だけで十分な場合が多いですが、組織外の個人情報を扱うケースや導入企業のセキュリティ要求レベルが高いと、それ以外の要求が発生します。これらを「if 文」や「ロールのハードコード」で実装しようとすると、ビジネスロジックと認可ロジックが密結合し、メンテナンス不能なスパゲッティコードが生まれてしまいます。
+まずはどんな認可パターンがあるのか紹介した上で、我々が採用した認可パターンについて解説します。
 
 ## 認可モデルのおさらい
 
@@ -39,16 +32,20 @@ BtoB SaaS、特にエンタープライズ向けの製品開発において、�
 
 | モデル | 判定基準 | 特徴・メリット | デメリット | 典型的なユースケース |
 | :--- | :--- | :--- | :--- | :--- |
-| **RBAC**<br>(Role-Based) | **役割 (Role)**<br>例: Admin, Manager, Guest | ・シンプルで直感的<br>・「誰が何をできるか」が明確 | ・ロールの数が増えすぎると管理が困難になる (Role Explosion)<br>・「自分の作成した記事」のような文脈依存の制御が苦手 | 管理画面、ブログの投稿権限 |
-| **ABAC**<br>(Attribute-Based) | **属性 (Attribute)**<br>例: 部署, 作成日, 公開ステータス | ・「AかつBなら許可」のような複雑な条件を表現できる<br>・きめ細かな制御が可能 | ・ポリシー定義が複雑になりがち<br>・パフォーマンスへの影響が出やすい | 部署ごとのデータ閲覧制限、時間帯制限 |
-| **ReBAC**<br>(Relationship-Based) | **関係性 (Relationship)**<br>例: 所有者(Owner), 所属(Member) | ・グラフ構造や階層構造に強い<br>・親リソースの権限を子へ継承させやすい | ・リレーション探索のコストが高い<br>・実装難易度が高い（Google Zanzibarなど） | Google Drive (フォルダ権限の継承)、SNSのフレンド限定公開 |
-| **PBAC**<br>(Policy-Based) | **ポリシー (Policy)**<br>例: ルール言語での条件定義 | ・認可ロジックを分離・コード管理できる (Policy as Code)<br>・RBAC/ABAC/ReBACを包括的に表現可能 | ・専用言語や評価エンジンの学習・導入コスト<br>・デバッグが難しくなる場合がある | AWS IAM, OPA, 複雑なコンプライアンス要件 |
+| **RBAC**<br>(Role Based Access Control) | **役割 (Role)**<br>例: Admin, Manager, Guest | ・シンプルで直感的<br>・「誰が何をできるか」が明確 | ・ロールの数が増えすぎると管理が困難になる (Role Explosion)<br>・「自分の作成した記事」のような文脈依存の制御が苦手 | 管理画面、ブログの投稿権限 |
+| **ABAC**<br>(Attribute Based Access Control) | **属性 (Attribute)**<br>例: 部署, 作成日, 公開ステータス | ・「AかつBなら許可」のような複雑な条件を表現できる<br>・きめ細かな制御が可能 | ・ポリシー定義が複雑になりがち<br>・パフォーマンスへの影響が出やすい | 部署ごとのデータ閲覧制限、時間帯制限 |
+| **PBAC**<br>(Policy Based Access Control) | **ポリシー (Policy)**<br>例: ルール言語での条件定義 | ・認可ロジックを分離・コード管理できる (Policy as Code)<br>・RBAC/ABAC/ReBACを包括的に表現可能 | ・専用言語や評価エンジンの学習・導入コスト<br>・デバッグが難しくなる場合がある | AWS IAM, OPA, 複雑なコンプライアンス要件 |
+| **ReBAC**<br>(Relationship Based Access Control) | **関係性 (Relationship)**<br>例: 所有者(Owner), 所属(Member) | ・グラフ構造や階層構造に強い<br>・親リソースの権限を子へ継承させやすい | ・リレーション探索のコストが高い<br>・実装難易度が高い（Google Zanzibarなど） | Google Drive (フォルダ権限の継承)、SNSのフレンド限定公開 |
 
-文字だと想像しにくいため、視覚的・直感的に理解しやすいデモアプリを用意しました。
+ほとんどのSaaSではロール管理だけで十分な場合が多いですが、組織外の個人情報を扱うケースや導入企業のセキュリティ要求レベルが高いとそれ以外の要求が発生する可能性があります。これらを「if 文」や「ロールのハードコード」で実装しようとすると、ビジネスロジックと認可ロジックが密結合し、メンテナンス不能なスパゲッティコードが生まれてしまいます。
 
-https://access-control-visualizer-jwp8wgozh-saka2jps-projects.vercel.app/
+視覚的・直感的に違いが理解しやすいデモアプリを用意したので自由に触ってみてください！
 
-# 今回の題材：[PeopleX AI面接](https://peoplex.jp/)の場合
+https://access-control-visualizer.vercel.app
+
+https://github.com/saka2jp/access-control-visualizer
+
+## 今回の題材：[PeopleX AI面接](https://peoplex.jp/)の場合
 
 PeopleX AI面接は、ATS（採用管理システム）としての側面もあり、まだ組織に所属していない外部の方の個人情報を取り扱うサービスのため、認可の要件レベルは一般的な BtoB SaaS と比べると高いと感じています。
 
@@ -124,17 +121,17 @@ CASL における **Ability** は、認可ルールの心臓部となるクラ�
 Prisma の生成した型をそのまま Subject として利用可能です。
 
 ```typescript
-import { Candidate } from '@prisma/client'; // Prismaの型
+import { Candidate, JobPost } from '@prisma/client'; // Prismaの型
 import { PureAbility } from '@casl/ability';
 import { PrismaQuery, Subjects } from '@casl/prisma';
 
 // アクションの定義
 export type Action = 'manage' | 'create' | 'read' | 'update' | 'delete';
 
-// Subjectの定義（Prismaのモデル名とクラスを紐付ける）
 export type AppSubjects = 
   | Subjects<{
       Candidate: Candidate;
+      JobPost: JobPost;
     }>
   | 'all';
 
@@ -150,41 +147,19 @@ export type AppAbility = PureAbility<[Action, AppSubjects], PrismaQuery>;
 import { AbilityBuilder } from '@casl/ability';
 import { createPrismaAbility } from '@casl/prisma';
 
-type UserContext = {
-  id: string;
-  tenantId: string;
-  role: 'Admin' | 'Recruiter' | 'Interviewer';
-  departmentIds: string[];
-};
-
 export function defineAbilityFor(user: UserContext): AppAbility {
-  // createPrismaAbility を渡すことで、PrismaQuery 用のビルダを生成
-  const { can, cannot, build } = new AbilityBuilder<AppAbility>(createPrismaAbility);
+  const { can, cannot, build } = new AbilityBuilder(createPrismaAbility);
 
-  // 1. テナント管理者
-  if (user.role === 'Admin') {
-    can('manage', 'all', { tenantId: user.tenantId });
-  }
-
-  // 2. 採用担当者
-  // 自分の所属する部署の候補者のみ操作可能
   if (user.role === 'Recruiter') {
-    can(['read', 'update'], 'Candidate', {
-      departmentId: { in: user.departmentIds },
+    // ABAC: 自部署の求人のみ閲覧・操作可能
+    can(['read', 'update'], 'JobPost', {
+      departmentId: { in: user.departmentIds },　// Prismaのクエリ構文で条件を記述
     });
   }
-
-  // 3. 面接官
-  // 自分の所属する部署の候補者のみ操作可能
-  if (user.roles.includes('Interviewer')) {
-    can(['read', 'update'], 'Candidate', {
-      departmentId: { in: user.departmentIds },
-    });
-    
-    // フィールドレベル制御
+  if (user.role === 'Evaluator') {
+    // Field-Level: 個人情報は見せない
     cannot('read', 'Candidate', ['name', 'email']);
   }
-
   return build();
 }
 ```
@@ -200,9 +175,9 @@ NestJS では、Guard とカスタムデコレータを組み合わせること�
 ```typescript
 @Get()
 @UseGuards(PoliciesGuard)
-@CheckPolicies((ability: AppAbility) => ability.can('read', 'Candidate'))
+@CheckPolicies((ability) => ability.can('read', 'JobPost'))
 async findAll() {
-  return this.candidatesService.findAll();
+  return this.jobPostService.findAll();
 }
 ```
 
@@ -218,17 +193,17 @@ CASL 公式の `@casl/prisma` プラグインを使用することで、定義�
 ```typescript
 import { accessibleBy } from '@casl/prisma';
 
-export async function getCandidates(user: UserContext) {
-  const candidates = await prisma.candidate.findMany({
+export async function findJobPosts(user: UserContext) {
+  const jobPosts = await prisma.candidate.findMany({
     where: {
       AND: [
         // AbilityからWhere句を参照
-        accessibleBy(ability, 'read').Candidate,
+        accessibleBy(ability, 'read').JobPost,
       ]
     }
   });
 
-  return candidates;
+  return jobPosts;
 }
 ```
 
@@ -247,7 +222,10 @@ import { permittedFieldsOf } from '@casl/ability/extra';
 
 // 取得したオブジェクトから、見せてはいけないフィールドを除外する
 const candidate = await prisma.candidate.findUnique({ ... });
-const fields = permittedFieldsOf(ability, 'read', candidate, { fieldsFrom: rule => rule.fields || [] });
+const fields = permittedFieldsOf(
+  ability, 'read', candidate,
+  { fieldsFrom: rule => rule.fields || [] },
+);
 
 // Lodashのpickなどでフィルタリング
 const sanitizedCandidate = pick(candidate, fields);
@@ -288,6 +266,41 @@ export function CandidateCard({ candidate }) {
     </button>
   </div>
 };
+```
+
+```tsx
+export function CandidateCard({ candidate }) {
+  return (
+    <div className="card">
+      <h1>{candidate.name}</h1>
+      
+      {/* 権限がある場合のみボタンを表示 */}
+      <Can I="update" this={candidate}>
+        <button onClick={handleEdit}>編集</button>
+      </Can>
+    </div>
+  );
+}
+```
+
+```tsx
+export function CandidateCard({ candidate }) {
+  const ability = useAppAbility();　// AppAbilityを参照するカスタムフック
+
+  return (
+    <div className="card">
+      <h1>{candidate.name}</h1>
+      
+      {/* 権限がない場合はボタンを非活性 */}
+      <button
+        onClick={handleEdit}
+        disabled={ability.cannot('update', candidate)}
+      >
+        編集
+      </button>
+    </div>
+  );
+}
 ```
 
 # 実際に導入・運用してみた感想
