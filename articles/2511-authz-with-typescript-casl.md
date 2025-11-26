@@ -165,7 +165,7 @@ export function defineAbilityFor(user: UserContext): AppAbility {
 ```
 
 ここで重要なのは、`conditions` オブジェクトの中に Prisma のクエリ構文（`in`, `some` など）を直接書いている点です。これが後の Prisma 連携で効いてきます。
-また、例のように愚直に条件分岐で `can`, `cannot` を呼び出しているのではなく、ロールと権限のペアを宣言的に管理しています。
+また、例のように愚直に条件分岐で `can`, `cannot` を呼び出しているのではなく、ロールと権限のペアをJSONで宣言的に管理しています。
 
 ## 2. バックエンド実装: API レベルの制御
 
@@ -266,41 +266,6 @@ export function CandidateCard({ candidate }) {
     </button>
   </div>
 };
-```
-
-```tsx
-export function CandidateCard({ candidate }) {
-  return (
-    <div className="card">
-      <h1>{candidate.name}</h1>
-      
-      {/* 権限がある場合のみボタンを表示 */}
-      <Can I="update" this={candidate}>
-        <button onClick={handleEdit}>編集</button>
-      </Can>
-    </div>
-  );
-}
-```
-
-```tsx
-export function CandidateCard({ candidate }) {
-  const ability = useAppAbility();　// AppAbilityを参照するカスタムフック
-
-  return (
-    <div className="card">
-      <h1>{candidate.name}</h1>
-      
-      {/* 権限がない場合はボタンを非活性 */}
-      <button
-        onClick={handleEdit}
-        disabled={ability.cannot('update', candidate)}
-      >
-        編集
-      </button>
-    </div>
-  );
-}
 ```
 
 # 実際に導入・運用してみた感想
