@@ -24,7 +24,7 @@ BtoB SaaS の開発において、「認可（Authorization）」 は複雑で�
 
 https://hokuriku.tskaigi.org/talks/20
 
-https://speakerdeck.com/saka2jp/authz-with-casl
+@[speakerdeck](0e067c71921b4449a85937d93d1b4a04)
 
 # BtoB SaaS における認可と技術選定
 
