@@ -20,7 +20,7 @@ BtoB SaaS の開発において、「認可（Authorization）」 は複雑で�
 
 本記事では、フロントエンド/バックエンドで TypeScript を採用している PeopleX AI 面接を題材に、**CASL** を中心に据えた認可アーキテクチャの実践を紹介します。
 
-こちらの記事は TSKaigi Hokuriku 2025 のトークセッションにて発表した内容をより詳細に文章化したものです。
+※ こちらの記事は TSKaigi Hokuriku 2025 のトークセッションにて発表した内容をより詳細に文章化したものです。
 
 https://hokuriku.tskaigi.org/talks/20
 
