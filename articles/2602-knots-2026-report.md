@@ -3,7 +3,7 @@ title: "KNOTS 2026で「AIネイティブスタートアップにおけるプロ
 emoji: "🎤"
 type: "idea"
 topics: ["登壇", "AI", "プロダクト開発", "スタートアップ", "KNOTS"]
-published: false
+published: true
 ---
 
 ## はじめに
