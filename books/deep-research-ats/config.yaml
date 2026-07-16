@@ -1,0 +1,22 @@
+title: "Deep Research: 採用管理システム（ATS）のソフトウェアアーキテクチャ"
+summary: "ATS（Applicant Tracking System）のデータモデル・API設計・標準仕様・システム連携・マルチテナント設計・AI/ML機能を網羅した技術調査レポート"
+topics: ["ats", "hr", "api", "saas", "ai"]
+published: false
+price: 0
+toc_depth: 2
+chapters:
+  - chapter1
+  - chapter2
+  - chapter3
+  - chapter4
+  - chapter5
+  - chapter6
+  - chapter7
+  - chapter8
+  - chapter9
+  - chapter10
+  - chapter11
+  - chapter12
+  - chapter13
+  - chapter14
+  - chapter15
